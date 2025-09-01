@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        #productForm {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .media-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .media-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .media-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        
+        .media-btn i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .status-message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-media {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .audio-placeholder {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f7fa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-content {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .product-price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        
+        .product-description {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .media-type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .badge-image {
+            background: #3498db;
+            color: white;
+        }
+        
+        .badge-video {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .badge-audio {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .card-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .edit-mode {
+            background-color: #fff8e1;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 768px) {
+            .products-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .media-type-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-store"></i> Product Manager</h1>
+            <p>Add, view, update, and delete products with different media types</p>
+        </header>
+        
+        <div class="controls">
+            <button class="btn btn-primary" onclick="toggleForm()">
+                <i class="fas fa-plus"></i> Add New Product
+            </button>
+            <button class="btn btn-success" onclick="loadProducts()">
+                <i class="fas fa-sync-alt"></i> Refresh Products
+            </button>
+        </div>
+        
+        <form id="productForm" style="display: none;">
+            <h3 id="formTitle">Add New Product</h3>
+            
+            <div class="form-group">
+                <label>Media Type</label>
+                <div class="media-type-selector">
+                    <div class="media-btn active" onclick="selectMediaType('image')">
+                        <i class="fas fa-image"></i>
+                        <div>Image</div>
+                    </div>
+                    <div class="media-btn" onclick="selectMediaType('video')">
+                        <i class="fas fa-video"></i>
+                        <div>Video</div>
+                    </div>
+                    <div class="media-btn" onclick="selectMediaType('audio')">
+                        <i class="fas fa-music"></i>
+                        <div>Audio</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="productNameInput">Product Name</label>
+                <input id="productNameInput" type="text" placeholder="Enter product name" required>
+            </div>
+            <div class="form-group">
+                <label for="productPriceInput">Price ($)</label>
+                <input id="productPriceInput" type="text" placeholder="Enter product price" required>
+            </div>
+            <div class="form-group">
+                <label for="productDescriptionInput">Description</label>
+                <input id="productDescriptionInput" type="text" placeholder="Enter product description" required>
+            </div>
+            <div class="form-group">
+                <label for="mediaUrlInput" id="mediaUrlLabel">Image URL</label>
+                <input id="mediaUrlInput" type="text" placeholder="Enter image URL" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="submitProduct()">
+                    <i class="fas fa-save"></i> Save Product
+                </button>
+                <button type="button" class="btn btn-danger" onclick="cancelEdit()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+            <input type="hidden" id="editingProductId" value="">
+            <input type="hidden" id="mediaType" value="image">
+        </form>
+        
+        <div id="statusMessage" class="status-message"></div>
+        
+        <h2>Product List</h2>
+        <div id="productsList" class="products-container">
+            <div class="loading">Loading products...</div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration - REPLACE WITH YOUR CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXSHi1aSU8ShhufVEhL0x5SL1Jm4Fs6rc",
+            authDomain: "store-names-1afa0.firebaseapp.com",
+            projectId: "store-names-1afa0",
+            storageBucket: "store-names-1afa0.firebasestorage.app",
+            messagingSenderId: "370617677835",
+            appId: "1:370617677835:web:082dac586526761458af0e",
+            measurementId: "G-5HSPJBF5FY"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Get DOM elements
+        const productForm = document.getElementById('productForm');
+        const formTitle = document.getElementById('formTitle');
+        const nameInput = document.getElementById('productNameInput');
+        const priceInput = document.getElementById('productPriceInput');
+        const descriptionInput = document.getElementById('productDescriptionInput');
+        const mediaUrlInput = document.getElementById('mediaUrlInput');
+        const mediaUrlLabel = document.getElementById('mediaUrlLabel');
+        const editingProductId = document.getElementById('editingProductId');
+        const mediaTypeInput = document.getElementById('mediaType');
+        const statusMessage = document.getElementById('statusMessage');
+        const productsList = document.getElementById('productsList');
+
+        // Select media type
+        function selectMediaType(type) {
+            // Update active button
+            const buttons = document.querySelectorAll('.media-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Update media type
+            mediaTypeInput.value = type;
+            
+            // Update label and placeholder
+            if (type === 'image') {
+                mediaUrlLabel.textContent = 'Image URL';
+                mediaUrlInput.placeholder = 'Enter image URL';
+            } else if (type === 'video') {
+                mediaUrlLabel.textContent = 'Video URL';
+                mediaUrlInput.placeholder = 'Enter video URL';
+            } else if (type === 'audio') {
+                mediaUrlLabel.textContent = 'Audio URL';
+                mediaUrlInput.placeholder = 'Enter audio URL';
+            }
+        }
+
+        // Toggle form visibility
+        function toggleForm() {
+            if (productForm.style.display === 'none') {
+                productForm.style.display = 'block';
+                window.scrollTo({ top: productForm.offsetTop - 20, behavior: 'smooth' });
+            } else {
+                productForm.style.display = 'none';
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-message ' + type;
+            setTimeout(() => {
+                statusMessage.className = 'status-message';
+            }, 3000);
+        }
+
+        // Add or update product in Firestore
+        async function submitProduct() {
+            // Basic validation
+            if (!nameInput.value || !priceInput.value || !descriptionInput.value || !mediaUrlInput.value) {
+                showStatus('Please fill in all fields', 'error');
+                return;
+            }
+
+            try {
+                if (editingProductId.value) {
+                    // Update existing product
+                    await db.collection('products').doc(editingProductId.value).update({
+                        name: nameInput.value,
+                        price: priceInput.value,
+                        description: descriptionInput.value,
+                        mediaUrl: mediaUrlInput.value,
+                        mediaType: mediaTypeInput.value,
+                        updatedAt: new Date()
+                    });
+                    
+                    showStatus('Product updated successfully!', 'success');
+                } else {
+                    // Add new product to Firestore
+                    await db.collection('products').add({
+                        name: nameInput.value,
+                        price: priceInput.value,
+                        description: descriptionInput.value,
+                        mediaUrl: mediaUrlInput.value,
+                        mediaType: mediaTypeInput.value,
+                        createdAt: new Date(),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    showStatus('Product added successfully!', 'success');
+                }
+                
+                // Clear form
+                nameInput.value = '';
+                priceInput.value = '';
+                descriptionInput.value = '';
+                mediaUrlInput.value = '';
+                editingProductId.value = '';
+                
+                // Reset to image type
+                selectMediaType('image');
+                
+                // Hide form
+                productForm.style.display = 'none';
+                formTitle.textContent = 'Add New Product';
+                
+                // Reload products
+                loadProducts();
+                
+            } catch (error) {
+                console.error('Error saving product: ', error);
+                showStatus('Error saving product: ' + error.message, 'error');
+            }
+        }
+
+        // Load products from Firestore
+        function loadProducts() {
+            productsList.innerHTML = '<div class="loading">Loading products...</div>';
+
+            db.collection('products')
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then(snapshot => {
+                    if (snapshot.empty) {
+                        productsList.innerHTML = '<div class="loading">No products found. Add your first product!</div>';
+                        return;
+                    }
+
+                    productsList.innerHTML = ''; // Clear loading message
+
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.id = 'product-' + doc.id;
+
+                        // Determine media type badge
+                        let badgeClass = '';
+                        let badgeText = '';
+                        if (data.mediaType === 'image') {
+                            badgeClass = 'badge-image';
+                            badgeText = 'Image';
+                        } else if (data.mediaType === 'video') {
+                            badgeClass = 'badge-video';
+                            badgeText = 'Video';
+                        } else if (data.mediaType === 'audio') {
+                            badgeClass = 'badge-audio';
+                            badgeText = 'Audio';
+                        }
+
+                        // Create media element based on type
+                        let mediaElement = '';
+                        if (data.mediaType === 'image') {
+                            mediaElement = `<img class="product-media" src="${data.mediaUrl || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${data.name}">`;
+                        } else if (data.mediaType === 'video') {
+                            mediaElement = `
+                                <video class="product-media" controls>
+                                    <source src="${data.mediaUrl}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            `;
+                        } else if (data.mediaType === 'audio') {
+                            mediaElement = `
+                                <div class="audio-placeholder">
+                                    <audio controls>
+                                        <source src="${data.mediaUrl}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            `;
+                        }
+
+                        productCard.innerHTML = `
+                            ${mediaElement}
+                            <div class="product-content">
+                                <span class="media-type-badge ${badgeClass}">${badgeText}</span>
+                                <h3 class="product-title">${data.name}</h3>
+                                <div class="product-price">$${data.price}</div>
+                                <p class="product-description">${data.description}</p>
+                                <div class="card-buttons">
+                                    <button class="btn btn-primary" onclick="editProduct('${doc.id}')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteProduct('${doc.id}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        productsList.appendChild(productCard);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading products: ', error);
+                    productsList.innerHTML = '<div class="error">Error loading products. Check console for details.</div>';
+                });
+        }
+
+        // Edit product - load data into form
+        function editProduct(id) {
+            db.collection('products').doc(id).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        nameInput.value = data.name;
+                        priceInput.value = data.price;
+                        descriptionInput.value = data.description;
+                        mediaUrlInput.value = data.mediaUrl;
+                        editingProductId.value = doc.id;
+                        
+                        // Set media type
+                        selectMediaType(data.mediaType || 'image');
+                        
+                        formTitle.textContent = 'Edit Product';
+                        productForm.style.display = 'block';
+                        productForm.classList.add('edit-mode');
+                        
+                        window.scrollTo({ top: productForm.offsetTop - 20, behavior: 'smooth' });
+                        
+                        showStatus('Now editing: ' + data.name, 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading product for edit: ', error);
+                    showStatus('Error loading product: ' + error.message, 'error');
+                });
+        }
+
+        // Cancel edit mode
+        function cancelEdit() {
+            nameInput.value = '';
+            priceInput.value = '';
+            descriptionInput.value = '';
+            mediaUrlInput.value = '';
+            editingProductId.value = '';
+            productForm.style.display = 'none';
+            productForm.classList.remove('edit-mode');
+            formTitle.textContent = 'Add New Product';
+            
+            // Reset to image type
+            selectMediaType('image');
+        }
+
+        // Delete product from Firestore
+        async function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                try {
+                    await db.collection('products').doc(id).delete();
+                    showStatus('Product deleted successfully!', 'success');
+                    
+                    // Remove the product card from UI
+                    const productCard = document.getElementById('product-' + id);
+                    if (productCard) {
+                        productCard.remove();
+                    }
+                    
+                    // If we were editing this product, cancel edit mode
+                    if (editingProductId.value === id) {
+                        cancelEdit();
+                    }
+                } catch (error) {
+                    console.error('Error deleting product: ', error);
+                    showStatus('Error deleting product: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Load products when page loads
+        document.addEventListener('DOMContentLoaded', loadProducts);
+    </script>
+</body>
+</html>
